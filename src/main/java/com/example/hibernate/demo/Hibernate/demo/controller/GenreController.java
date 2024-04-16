@@ -50,8 +50,11 @@ public class GenreController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
-        genreService.deleteById(id);
+    public ResponseEntity<Boolean> deleteGenre(@PathVariable Long id) {
+        boolean success = genreService.deleteById(id);
+        if (!success) {
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

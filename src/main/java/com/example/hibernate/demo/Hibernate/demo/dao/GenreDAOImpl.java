@@ -5,6 +5,7 @@ import com.example.hibernate.demo.Hibernate.demo.entity.Genre;
 import lombok.Setter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -77,14 +78,32 @@ public class GenreDAOImpl implements GenreDAO {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public boolean deleteById(Long id) {
         Session session = this.sessionFactory.getCurrentSession();
         session.beginTransaction();
+
+        // Check if any book references this genre
+        // Check if any book references this genre
+        Long count = session.createQuery("select count(*) from books where genre.id = :id", Long.class)
+                .setParameter("id", id)
+                .uniqueResult();
+
+        if (count > 0) {
+            session.getTransaction().commit();
+            session.close();
+            return false; // Books reference this genre, so deletion is not allowed
+        }
+
+        // No books reference this genre, proceed with deletion
         Genre genre = session.get(Genre.class, id);
-        if(genre != null){
+        if (genre != null) {
             session.remove(genre);
         }
+
         session.getTransaction().commit();
         session.close();
+
+        return true; // Deletion successful
     }
+
 }

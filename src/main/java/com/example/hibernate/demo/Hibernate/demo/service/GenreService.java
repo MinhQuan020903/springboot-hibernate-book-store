@@ -30,7 +30,7 @@ public class GenreService {
         return genreDAO.updateGenre(id, genre);
     }
 
-    public void deleteById(Long id) {
-        genreDAO.deleteById(id);
+    public boolean deleteById(Long id) {
+        return genreDAO.deleteById(id);
     }
 }

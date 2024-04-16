@@ -10,6 +10,6 @@ public interface GenreDAO {
     public Genre getGenre(Long id);
     public Genre addGenre(Genre genre);
     public Genre updateGenre(Long id, Genre genre);
-    public void deleteById(Long id);
+    public boolean deleteById(Long id);
 
 }
